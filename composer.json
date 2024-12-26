@@ -1,0 +1,22 @@
+{
+    "name": "accuratetax-web/php-sdk",
+    "description": "PHP Package for interacting with AccurateTax API",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "AccurateTax\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Donald Organ",
+            "email": "dorgan@donaldorgan.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "guzzlehttp/guzzle": "^7.9"
+    },
+    "minimum-stability": "stable"
+}
