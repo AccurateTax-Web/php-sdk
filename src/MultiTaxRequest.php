@@ -59,8 +59,12 @@
             array_push($this->taxRequests, $taxRequest);
         }
 
-        public function getRequestCount() {
+        public function getRequestCount(): int {
             return count($this->taxRequests);
+        }
+
+        public function getRequests(): array {
+            return $this->taxRequests;
         }
 
         public function setDomain($domain) {
