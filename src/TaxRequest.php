@@ -36,7 +36,7 @@
         private string $endPoint = '/service.php';
 
         /**
-         * @var string The response from the request
+         * @var \SimpleXMLElement The response from the request
          */
         public $response;
 
@@ -44,6 +44,11 @@
          * @var array Errors encountered during the request
          */
         public array $errors = [];
+
+        /**
+         * @var array meta data for the request
+         */
+        public array $meta = [];
 
         /**
          * Create a TaxRequest
@@ -196,7 +201,10 @@
                             'errors' => $this->errors
                         );
                     }
+                } else {
+                    $this->response = $taxResponse;
                 }
+
                 if (isset($taxResponse->errors)) {
                     foreach($taxResponse->errors->error as $err) {
                         array_push($this->errors, (string)$err);
