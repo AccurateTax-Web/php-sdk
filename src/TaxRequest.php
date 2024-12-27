@@ -1,8 +1,8 @@
 <?php
     namespace AccurateTax;
 
-    use GuzzleHttp\Client;
     use \AccurateTax\TaxRequest\Order;
+    use GuzzleHttp\Client;
 
     class TaxRequest {
         /**
@@ -36,9 +36,9 @@
         private string $endPoint = '/service.php';
 
         /**
-         * @var \Psr\Http\Message\ResponseInterface The response from the request
+         * @var string The response from the request
          */
-        public \Psr\Http\Message\ResponseInterface $response;
+        public $response;
 
         /**
          * @var array Errors encountered during the request
@@ -161,19 +161,26 @@
          * @return array|bool
          */
         public function send(bool $returnResponse = true): array|bool {
-            $client = new Client([
-                'base_uri' => 'https://' . $this->domain . '/' . $this->endPoint
-            ]);
-
-            $this->response = $client->request('POST', '', [
+            $client = new Client(
+                [
+                    'timeout' => 60
+                ]
+            );
+            $response = $client->request('GET', 'https://' . $this->domain . '/' . $this->endPoint, [
+                'config' => [
+                    'curl' => [
+                        CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
+                        CURLOPT_USERPWD => $this->licensekey . ':' . $this->checksum
+                    ]
+                ],
                 'form_params' => [
                     'data' => $this->getXml()
                 ]
             ]);
 
             try {
-                $prevErrorState = libxml_use_internal_errors(true);
-                $taxResponse = new \SimpleXMLElement( $this->response->getBody());
+                $prevErrorState = libxml_use_internal_errors(true);;
+                $taxResponse = simplexml_load_string(trim($response->getBody()));
                 $errors = libxml_get_errors();
                 if ( count( $errors ) > 0 ) {
                     foreach( $errors as $error ) {
