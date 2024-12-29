@@ -2,9 +2,27 @@
 namespace AccurateTax;
 
 class TaxClassAPI {
+
+    /**
+     * @var string Domain to use for API requests
+     */
+    protected $domain;
+
+    /**
+     * Create TaxClassAPI object
+     * @param string $domain
+     */
+    public function __construct($domain='us1.accuratetax.com')
+    {
+        if (!empty($domain)) {
+            $this->domain = $domain;
+        } else {
+            throw new \Exception('Domain is required and cannot be empty');
+        }
+    }
     public function checkForStoreTaxClass($storeId, $taxClass)
     {
-        $url = 'https://' . getenv('AT_CLUSTER') . '.accuratetax.com' . '/checkStoreTaxClass.php';
+        $url = 'https://' . $this->domain . '/checkStoreTaxClass.php';
         $resp = $this->sendToHost($url, [
             'storeId'  => $storeId,
             'taxClass' => $taxClass,
@@ -18,7 +36,7 @@ class TaxClassAPI {
 
     public function notifyMissingTaxClass($storeId, array $taxClasses, array $additionalParams = [])
     {
-        $url = 'https://' . getenv('AT_CLUSTER') . '.accuratetax.com' . '/notifyMissingTaxClass.php';
+        $url = 'https://' . $this->domain . '/notifyMissingTaxClass.php';
 
         $resp = $this->sendToHost($url, [
             'storeId'  => $storeId,
