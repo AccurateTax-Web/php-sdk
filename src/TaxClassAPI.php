@@ -9,20 +9,32 @@ class TaxClassAPI {
     protected $domain;
 
     /**
+     * @var string Protocol to use for API requests
+     */
+    protected $protocol;
+
+    /**
      * Create TaxClassAPI object
+     * @param string $protocol
      * @param string $domain
      */
-    public function __construct($domain='us1.accuratetax.com')
+    public function __construct($protocol='https', $domain='us1.accuratetax.com')
     {
         if (!empty($domain)) {
             $this->domain = $domain;
         } else {
             throw new \Exception('Domain is required and cannot be empty');
         }
+
+        if (!empty($protocol) && ($protocol == 'https' || $protocol == 'http')) {
+            $this->protocol = $protocol;
+        } else {
+            throw new \Exception('Protocol is required and cannot be empty and can be either http or https');
+        }
     }
     public function checkForStoreTaxClass($storeId, $taxClass)
     {
-        $url = 'https://' . $this->domain . '/checkStoreTaxClass.php';
+        $url = $this->protocol . '://' . $this->domain . '/checkStoreTaxClass.php';
         $resp = $this->sendToHost($url, [
             'storeId'  => $storeId,
             'taxClass' => $taxClass,
@@ -36,7 +48,7 @@ class TaxClassAPI {
 
     public function notifyMissingTaxClass($storeId, array $taxClasses, array $additionalParams = [])
     {
-        $url = 'https://' . $this->domain . '/notifyMissingTaxClass.php';
+        $url = $this->protocol . '://' . $this->domain . '/notifyMissingTaxClass.php';
 
         $resp = $this->sendToHost($url, [
             'storeId'  => $storeId,
