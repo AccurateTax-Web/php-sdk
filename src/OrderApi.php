@@ -35,26 +35,27 @@ class OrderApi {
         $host = 'https://' . $this->domain . '/getOrderDetailsService.php/' . $ordernum;
         $client = new Client();
 
-        $this->response = $client->request('GET', $host, [
-            'headers' => [
-                'Authorization' => 'Basic ' . base64_encode($this->license . ":"  . $this->checksum),
-            ]
-        ]);
-
-        $statusCode = $this->response->getStatusCode();
-        $this->statusCode = $statusCode;
-
-        if ($statusCode == 404) {
-            return false;
+        try {
+            $this->response = $client->request('GET', $host, [
+                'headers' => [
+                    'Authorization' => 'Basic ' . base64_encode($this->license . ":"  . $this->checksum),
+                ]
+            ]);
+            $this->statusCode = $this->response->getStatusCode();
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $this->statusCode = $e->getCode();
+            if ($this->statusCode === 404) {
+                $res = $e->getResponse();
+                return false;
+            }
         }
 
-        if ($statusCode != 200 && $statusCode != 202) {
+        if ($this->statusCode != 200 && $this->statusCode != 202) {
             throw new \Exception('Error: ' . $this->response->getStatusCode());
         }
 
-        $resp = $this->response;
         try {
-            $json = json_decode($resp->getBody());
+            $json = json_decode($this->response->getBody());
         } catch(\Exception $e) {
             throw new \Exception('Error: ' . $e->getMessage());
         }
