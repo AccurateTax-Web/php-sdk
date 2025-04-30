@@ -92,18 +92,18 @@
                     $respErrors = libxml_get_errors();
 
                     if (count($respErrors) > 0) {
-                        if (!isset($this->taxRequests[$idx]['errors'])) {
+                        if (!isset($this->taxRequests[$idx]->errors)) {
                             $this->taxRequests[$idx]->errors = [];
                         }
                         foreach($respErrors as $error) {
-                            $this->taxRequests[$idx]['errors'][] = $error->message;
+                            $this->taxRequests[$idx]->errors[] = $error->message;
                         }
                         libxml_clear_errors();
                     } else {
                         $this->taxRequests[$idx]->response = $taxResponse;
                     }
                     if (isset($taxResponse->errors)) {
-                        if (!isset($this->taxRequests[$idx]['errors'])) {
+                        if (!isset($this->taxRequests[$idx]->errors)) {
                             $this->taxRequests[$idx]->errors = [];
                         }
                         foreach($taxResponse->errors->error as $err) {
