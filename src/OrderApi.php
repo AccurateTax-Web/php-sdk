@@ -36,7 +36,7 @@ class OrderApi {
 
         $this->response = $client->request('GET', $host, [
             'headers' => [
-                'Authorization: Basic' => $this->license . ":"  . $this->checksum,
+                'Authorization' => 'Basic ' . $this->license . ":"  . $this->checksum,
             ]
         ]);
 
