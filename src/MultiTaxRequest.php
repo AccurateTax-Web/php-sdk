@@ -86,7 +86,7 @@
                 'concurrency' => $this->maxRequests,
                 'fulfilled' => function (Response $response, $idx) use (&$results) {
                     $req = $this->taxRequests[$idx];
-                    $state = $req->getShipping()->getAddress()->getState();
+                    $state = $req->getOrder()->getShipping()->getAddress()->getState();
                     $taxResponse = new \SimpleXMLElement($response->getBody());
                     $results[$state][] = $taxResponse;
                     $respErrors = libxml_get_errors();

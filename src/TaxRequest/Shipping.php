@@ -19,6 +19,10 @@
             $this->address = new Address($address1, $address2, $city, $state, $zip, $plus4);
         }
 
+        public function getAddress(): Address {
+            return $this->address;
+        }
+
         /**
          * Get the XML for the Shipping Address
          *

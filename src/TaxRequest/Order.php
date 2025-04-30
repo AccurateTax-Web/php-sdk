@@ -132,6 +132,14 @@
         }
 
         /**
+         * Returns Shipping Object
+         * @return Shipping
+         */
+        public function getShipping(): ?Shipping {
+            return $this->shipping;
+        }
+
+        /**
          * Add Handling to the Order
          *
          * @param Handling $handling
