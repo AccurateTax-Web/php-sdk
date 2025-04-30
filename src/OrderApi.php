@@ -36,10 +36,9 @@ class OrderApi {
 
         $this->response = $client->request('GET', $host, [
             'headers' => [
-                'Authorization' => 'Basic ' . $this->license . ":"  . $this->checksum,
+                'Authorization' => 'Basic ' . base64_encode($this->license . ":"  . $this->checksum),
             ]
         ]);
-
 
         if ($this->response->getStatusCode()!= 200) {
             throw new \Exception('Error: ' . $this->response->getStatusCode());
