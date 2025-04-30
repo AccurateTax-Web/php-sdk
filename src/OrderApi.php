@@ -41,11 +41,11 @@ class OrderApi {
         ]);
 
         $statusCode = $this->response->getStatusCode();
-        if ($statusCode === 404) {
+        if ($statusCode == 404) {
             return false;
         }
 
-        if ($statusCode !== 200 && $statusCode !== 202) {
+        if ($statusCode != 200 && $statusCode != 202) {
             throw new \Exception('Error: ' . $this->response->getStatusCode());
         }
 
