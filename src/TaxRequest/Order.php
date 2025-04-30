@@ -40,11 +40,6 @@
         private $customerId;
 
         /**
-         * @var string Source
-         */
-        private source;
-
-        /**
          * @var Address Ship To Address
          */
         private $shipTo;
@@ -168,15 +163,6 @@
         }
 
         /**
-         * Get the State of the Ship To Address
-         *
-         * @return string
-         */
-        public function setSource(string $source): string {
-            $this->source = $source;
-        }
-
-        /**
          * Get the XML for the Order
          *
          * @return string
@@ -187,9 +173,6 @@
             $xml .= '<create_date>' . date('c', strtotime($this->createDateTime)) . '</create_date>';
             if (!empty($this->customerId)) {
                 $xml .= '<customer_id>' . $this->customerId .'</customer_id>';
-            }
-            if (isset($this->source) && !empty($this->source)) {
-                $xml .= '<source>' . $this->source .'</source>';
             }
             $xml .= '<subtotal>' . $this->subTotal . '</subtotal>';
             if ($this->externalTaxCollected > 0) {

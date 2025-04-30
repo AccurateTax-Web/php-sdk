@@ -51,6 +51,11 @@
         public array $meta = [];
 
         /**
+         * @var string Source
+         */
+        private string $source;
+
+        /**
          * Create a TaxRequest
          * @param string $licensekey
          * @param string $checksum
@@ -59,6 +64,15 @@
         {
             $this->licensekey = $licensekey;
             $this->checksum = $checksum;
+        }
+
+        /**
+         * Get the State of the Ship To Address
+         *
+         * @return string
+         */
+        public function setSource(string $source): void {
+            $this->source = $source;
         }
 
         /**
@@ -152,6 +166,9 @@
             $xml .= '<breakdown>1</breakdown>';
             $xml .= '<item_breakdown>1</item_breakdown>';
             $xml .= '<commit>' . ($this->commit ? 'Y' : 'N') . '</commit>';
+            if (isset($this->source) && !empty($this->source)) {
+                $xml .= '<source>' . $this->source .'</source>';
+            }
             $xml .= $this->order->getXml();
             $xml .= '</taxrequest>';
 
