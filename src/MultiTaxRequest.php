@@ -87,9 +87,14 @@
                 'fulfilled' => function (Response $response, $idx) use (&$results) {
                     $req = $this->taxRequests[$idx];
                     $state = $req->getOrder()->getState();
-                    $taxResponse = new \SimpleXMLElement($response->getBody());
-                    $results[$state][] = $taxResponse;
-                    $respErrors = libxml_get_errors();
+                    try {
+                        $taxResponse = new \SimpleXMLElement($response->getBody());
+                    } catch (\Exception $e) {
+                        $respErrors = [$e->getMessage()];
+                    } finally {
+                        $results[$state][] = $taxResponse;
+                        $respErrors = libxml_get_errors();
+                    }
 
                     if (count($respErrors) > 0) {
                         if (!isset($this->taxRequests[$idx]->errors)) {
