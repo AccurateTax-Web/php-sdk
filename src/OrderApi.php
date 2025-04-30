@@ -8,6 +8,7 @@ class OrderApi {
     private $checksum;
     public $response;
     private $domain;
+    public $statusCode;
 
     /**
      * Create a new AccurateTax OrderApi Object
@@ -41,6 +42,8 @@ class OrderApi {
         ]);
 
         $statusCode = $this->response->getStatusCode();
+        $this->statusCode = $statusCode;
+
         if ($statusCode == 404) {
             return false;
         }
