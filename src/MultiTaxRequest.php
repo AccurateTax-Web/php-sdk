@@ -16,7 +16,7 @@
         /**
          * @var int Max size of Tax Requests in each batch
          */
-        private $maxRequests = 10;
+        private $maxRequests;
 
         /**
          * @var string The domain for the request
@@ -44,13 +44,18 @@
          * @param string $domain
          * @param string $path
          */
-        public function __construct($domain='', $path='') {
+        public function __construct($domain='', $path='', $maxRequests=10) {
             if (!empty($domain)) {
                 $this->domain = $domain;
             }
 
             if (!empty($path)) {
                 $this->endPoint = $path;
+            }
+            if (is_int($maxRequests) && $maxRequests > 0 && $maxRequests < 10) {
+                $this->maxRequests = $maxRequests;
+            } else {
+                $this->maxRequests = 10;
             }
             $this->client = new Client();
         }
