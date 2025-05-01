@@ -92,7 +92,7 @@
                         $results[$state][] = $taxResponse;
                         $respErrors = libxml_get_errors();
                     } catch (\Exception $e) {
-                        $respErrors = [$e->getMessage()];
+                        $respErrors = [(object)['message'=>$e->getMessage()]];
                     }
 
                     if (count($respErrors) > 0) {
