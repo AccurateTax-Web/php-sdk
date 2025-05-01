@@ -89,11 +89,10 @@
                     $state = $req->getOrder()->getState();
                     try {
                         $taxResponse = new \SimpleXMLElement($response->getBody());
-                    } catch (\Exception $e) {
-                        $respErrors = [$e->getMessage()];
-                    } finally {
                         $results[$state][] = $taxResponse;
                         $respErrors = libxml_get_errors();
+                    } catch (\Exception $e) {
+                        $respErrors = [$e->getMessage()];
                     }
 
                     if (count($respErrors) > 0) {
