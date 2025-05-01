@@ -85,15 +85,19 @@
             $pool = new Pool($this->client, $requests($this->taxRequests),[
                 'concurrency' => $this->maxRequests,
                 'fulfilled' => function (Response $response, $idx) use (&$results, $errors) {
+                    $hasParsingError = false;
                     $req = $this->taxRequests[$idx];
                     $state = $req->getOrder()->getState();
                     $respErrors = [];
+                    $parsingError = '';
                     try {
                         $taxResponse = new \SimpleXMLElement($response->getBody());
                         $results[$state][] = $taxResponse;
                         $respErrors = libxml_get_errors();
                     } catch (\Exception $e) {
-                        $errors[] = $e->getMessage();
+                        $hasParsingError = true;
+                        $parsingError = $e->getMessage();
+                        $errors[] = $parsingError;
                     }
 
                     if (count($respErrors) > 0) {
@@ -104,8 +108,13 @@
                             $this->taxRequests[$idx]->errors[] = $error->message;
                         }
                         libxml_clear_errors();
-                    } else {
+                    } else if (!$hasParsingError) {
                         $this->taxRequests[$idx]->response = $taxResponse;
+                    } else {
+                        if (!isset($this->taxRequests[$idx]->errors)) {
+                            $this->taxRequests[$idx]->errors = [];
+                        }
+                        $this->taxRequests[$idx]->errors[] = $parsingError;
                     }
                     if (isset($taxResponse->errors)) {
                         if (!isset($this->taxRequests[$idx]->errors)) {
