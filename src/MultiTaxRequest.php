@@ -84,10 +84,10 @@
             $prevErrorState = libxml_use_internal_errors(true);
             $pool = new Pool($this->client, $requests($this->taxRequests),[
                 'concurrency' => $this->maxRequests,
-                'fulfilled' => function (Response $response, $idx) use (&$results) {
+                'fulfilled' => function (Response $response, $idx) use (&$results, $errors) {
                     $req = $this->taxRequests[$idx];
                     $state = $req->getOrder()->getState();
-                    $errors = [];
+                    $respErrors = [];
                     try {
                         $taxResponse = new \SimpleXMLElement($response->getBody());
                         $results[$state][] = $taxResponse;
