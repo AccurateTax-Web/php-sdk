@@ -135,6 +135,7 @@
                 'rejected' => function (RequestException $reason, $idx) {
                     $request = $reason->getRequest();
                     $this->taxRequests[$idx]->errors[] = $reason->getMessage();
+                    $errors[] = $reason->getMessage();
                 },
             ]);
 
