@@ -111,6 +111,7 @@
                         }
                         foreach($respErrors as $error) {
                             $this->taxRequests[$idx]->errors[] = $error->message;
+                            $errors[] = $error->message;
                         }
                         libxml_clear_errors();
                     } else if (!$hasParsingError) {
@@ -127,6 +128,7 @@
                         }
                         foreach($taxResponse->errors->error as $err) {
                            $this->taxRequests[$idx]->errors[] = (string)$err;
+                           $errors[] = (string)$err;
                         }
                     }
                 },
