@@ -89,7 +89,7 @@
             $prevErrorState = libxml_use_internal_errors(true);
             $pool = new Pool($this->client, $requests($this->taxRequests),[
                 'concurrency' => $this->maxRequests,
-                'fulfilled' => function (Response $response, $idx) use (&$results, $errors) {
+                'fulfilled' => function (Response $response, $idx) use (&$results, &$errors) {
                     $hasParsingError = false;
                     $req = $this->taxRequests[$idx];
                     $state = $req->getOrder()->getState();
@@ -132,7 +132,7 @@
                         }
                     }
                 },
-                'rejected' => function (RequestException $reason, $idx) {
+                'rejected' => function (RequestException $reason, $idx) use(&$errors) {
                     $request = $reason->getRequest();
                     $this->taxRequests[$idx]->errors[] = $reason->getMessage();
                     $errors[] = $reason->getMessage();
