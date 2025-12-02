@@ -44,14 +44,16 @@ class OrderApi {
             $this->statusCode = $this->response->getStatusCode();
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             $this->statusCode = $e->getCode();
-            if ($this->statusCode === 404) {
+            if ($this->statusCode == 404) {
                 $res = $e->getResponse();
                 return false;
             }
         }
 
-        if ($this->statusCode != 200 && $this->statusCode != 202) {
+        if ($this->statusCode != 200 && $this->statusCode != 202 && $this->statusCode != 404) {
             throw new \Exception('Error: ' . $this->response->getStatusCode());
+        } else if ($this->statusCode == 404) {
+            return false;
         }
 
         try {
