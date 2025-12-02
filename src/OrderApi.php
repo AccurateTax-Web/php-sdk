@@ -38,16 +38,16 @@ class OrderApi {
         try {
             $this->response = $client->request('GET', $host, [
                 'headers' => [
-                    'Authorization' => 'Basic ' . base64_encode($this->license . ":"  . $this->checksum),
+                    'Authorization' => 'Basic ' . base64_encode(trim($this->license) . ":"  . trim($this->checksum)),
                 ]
             ]);
             $this->statusCode = $this->response->getStatusCode();
         } catch (\GuzzleHttp\Exception\ClientException $e) {
-            $this->statusCode = $e->getCode();
             if ($this->statusCode == 404) {
                 $res = $e->getResponse();
                 return false;
             }
+            $this->statusCode = $e->getCode();
         }
 
         if ($this->statusCode != 200 && $this->statusCode != 202) {
