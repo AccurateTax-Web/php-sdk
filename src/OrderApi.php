@@ -50,10 +50,14 @@ class OrderApi {
             }
         }
 
-        if ($this->statusCode != 200 && $this->statusCode != 202 && $this->statusCode != 404) {
-            throw new \Exception('Error: ' . $this->response->getStatusCode());
-        } else if ($this->statusCode == 404) {
-            return false;
+        if ($this->statusCode != 200 && $this->statusCode != 202) {
+            if (isset($this->response) && !is_null($this->response)) {
+                if (method_exists($this->response, 'getStatusCode')) {
+                    throw new \Exception('Error: ' . $this->response->getStatusCode());
+                }
+            } else {
+                throw new \Exception('Error: ' . $this->statusCode);
+            }
         }
 
         try {
