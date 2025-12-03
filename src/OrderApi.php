@@ -31,7 +31,7 @@ class OrderApi {
      *
      * @return false|object
      */
-    public function getOrder($ordernum) {
+    public function getOrder($ordernum, $headers=[]) {
 
         $host = 'https://' . $this->domain . '/getOrderDetailsService.php/' . $ordernum;
         $client = new Client([
@@ -39,7 +39,9 @@ class OrderApi {
         ]);
 
         try {
-            $this->response = $client->request('GET', $host);
+            $this->response = $client->get($host, [
+                'headers' => $headers,
+            ]);
             $this->statusCode = $this->response->getStatusCode();
         } catch (ClientException $e) {
             if ($e->hasResponse()) {
