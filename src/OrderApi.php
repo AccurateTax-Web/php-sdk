@@ -2,6 +2,7 @@
 namespace AccurateTax;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 
 class OrderApi {
     private $license;
@@ -34,21 +35,28 @@ class OrderApi {
 
         $host = 'https://' . $this->domain . '/getOrderDetailsService.php/' . $ordernum;
         $client = new Client([
-            'auth' => [ trim($this->license, trim($this->checksum))]
+            'auth' => [trim($this->license), trim($this->checksum)],
         ]);
 
         try {
             $this->response = $client->request('GET', $host);
             $this->statusCode = $this->response->getStatusCode();
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            if ($this->statusCode == 404) {
-                $res = $e->getResponse();
-                return false;
+        } catch (ClientException $e) {
+            if ($e->hasResponse()) {
+                $response = $e->getResponse();
+                $this->statusCode = $response->getStatusCode();
+                if ($this->statusCode == 404) {
+                    if ($e->hasResponse()) {
+                        $res = $response;
+                    }
+                    return false;
+                }
             }
-            $this->statusCode = $e->getCode();
+        } catch (\Exception $e) {
+            throw new \Exception('An unexpected error occurred: ' . $e->getMessage());
         }
 
-        if ($this->statusCode != 200) {
+        if (isset($this->statusCode) && $this->statusCode != 200 && $this->statusCode != 202 && $this->statusCode != 404) {
             if (isset($this->response) && !is_null($this->response)) {
                 if (method_exists($this->response, 'getStatusCode')) {
                     throw new \Exception('Error: ' . $this->response->getStatusCode());
@@ -56,6 +64,10 @@ class OrderApi {
             } else {
                 throw new \Exception('Error: ' . $this->statusCode);
             }
+        } else if ($this->statusCode == 404) {
+            return false;
+        } else if (!isset($this->statusCode)) {
+            throw new \Exception('No status code set');
         }
 
         try {
