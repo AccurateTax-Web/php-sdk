@@ -83,7 +83,9 @@
                 $uri = 'https://' . $this->domain . $this->endPoint;
                 foreach($taxRequests as $taxRequest) {
                     $body = $taxRequest->getXML();
-                    yield new Request('POST', $uri, [], $body);
+                    yield new Request('POST', $uri, [
+                        'x-internal-call' => '1',
+                    ], $body);
                 }
             };
             $prevErrorState = libxml_use_internal_errors(true);
