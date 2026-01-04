@@ -3,6 +3,7 @@
     "description": "PHP Package for interacting with AccurateTax API",
     "type": "library",
     "license": "MIT",
+    "version": "1.6.21",
     "autoload": {
         "psr-4": {
             "AccurateTax\\": "src/",
