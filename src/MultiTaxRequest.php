@@ -44,7 +44,7 @@
          * @param string $domain
          * @param string $path
          */
-        public function __construct($domain='', $path='', $maxRequests=10) {
+        public function __construct($domain='', $path='', $maxRequests=10, protected $headers = []) {
             if (!empty($domain)) {
                 $this->domain = $domain;
             }
@@ -83,9 +83,7 @@
                 $uri = 'https://' . $this->domain . $this->endPoint;
                 foreach($taxRequests as $taxRequest) {
                     $body = $taxRequest->getXML();
-                    yield new Request('POST', $uri, [
-                        'x-internal-call' => '1',
-                    ], $body);
+                    yield new Request('POST', $uri, $this->headers, $body);
                 }
             };
             $prevErrorState = libxml_use_internal_errors(true);
