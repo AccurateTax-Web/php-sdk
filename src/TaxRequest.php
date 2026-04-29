@@ -47,6 +47,11 @@ class TaxRequest
     public array $errors = [];
 
     /**
+     * @var string The batch ID for the request
+     */
+    protected ?string $batchId = null;
+
+    /**
      * @var array meta data for the request
      */
     public array $meta = [];
@@ -65,6 +70,11 @@ class TaxRequest
     {
         $this->licensekey = $licensekey;
         $this->checksum   = $checksum;
+    }
+
+    public function setBatchId(string $batchId): void
+    {
+        $this->batchId = $batchId;
     }
 
     /**
@@ -166,6 +176,9 @@ class TaxRequest
         $xml .= '<licensekey>' . $this->licensekey . '</licensekey>';
         $xml .= '<checksum>' . $this->checksum . '</checksum>';
         $xml .= '</auth>';
+        if (!is_null($this->batchId)) {
+            $xml .= '<batch>' . $this->batchId . '</batch>';
+        }
         $xml .= '<breakdown>1</breakdown>';
         $xml .= '<item_breakdown>1</item_breakdown>';
         $xml .= '<commit>' . ($this->commit ? 'Y' : 'N') . '</commit>';
