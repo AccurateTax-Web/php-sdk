@@ -177,13 +177,13 @@ class TaxRequest
         $xml .= '<checksum>' . $this->checksum . '</checksum>';
         $xml .= '</auth>';
         if (!is_null($this->batchId)) {
-            $xml .= '<batch>' . $this->batchId . '</batch>';
+            $xml .= '<batch><![CDATA[' . $this->batchId . ']]></batch>';
         }
         $xml .= '<breakdown>1</breakdown>';
         $xml .= '<item_breakdown>1</item_breakdown>';
         $xml .= '<commit>' . ($this->commit ? 'Y' : 'N') . '</commit>';
         if (isset($this->source) && ! empty($this->source)) {
-            $xml .= '<source>' . $this->source . '</source>';
+            $xml .= '<source><![CDATA[' . $this->source . ']]></source>';
         }
         $xml .= $this->order->getXml();
         $xml .= '</taxrequest>';

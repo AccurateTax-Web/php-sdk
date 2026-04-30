@@ -197,10 +197,10 @@ class Order
     public function getXml(): string
     {
         $xml  = '<order>';
-        $xml .= '<ordernum>' . $this->ordernum . '</ordernum>';
+        $xml .= '<ordernum><![CDATA[' . $this->ordernum . ']]></ordernum>';
         $xml .= '<create_date>' . date('c', strtotime($this->createDateTime)) . '</create_date>';
         if (! empty($this->customerId)) {
-            $xml .= '<customer_id>' . $this->customerId . '</customer_id>';
+            $xml .= '<customer_id><![CDATA[' . $this->customerId . ']]></customer_id>';
         }
         $xml .= '<subtotal>' . $this->subTotal . '</subtotal>';
         if ($this->externalTaxCollected > 0) {
