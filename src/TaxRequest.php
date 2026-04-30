@@ -42,6 +42,11 @@ class TaxRequest
     public $response;
 
     /**
+     * @var \Psr\Http\Message\ResponseInterface The raw response from the client
+     */
+    private ?\Psr\Http\Message\ResponseInterface $clientResponse = null;
+
+    /**
      * @var array Errors encountered during the request
      */
     public array $errors = [];
@@ -60,6 +65,11 @@ class TaxRequest
      * @var string Source
      */
     private string $source;
+
+    /**
+     * @var Client Guzzle Client
+     */
+    private Client $client;
 
     /**
      * Create a TaxRequest
@@ -191,6 +201,14 @@ class TaxRequest
         return $xml;
     }
 
+    public function getResponseCode(): ?int
+    {
+        if (isset($this->clientResponse)) {
+            return $this->clientResponse->getStatusCode();
+        }
+        return null;
+    }
+
     /**
      * Send Tax Request to AccuratTax
      *
@@ -200,12 +218,12 @@ class TaxRequest
      */
     public function send(bool $returnResponse = true): array|bool
     {
-        $client   = new Client(
+        $this->client   = new Client(
             [
                 'timeout' => 60,
             ]
         );
-        $response = $client->request('GET', 'https://' . $this->domain . '/' . $this->endPoint, [
+        $this->clientResponse = $this->client->request('GET', 'https://' . $this->domain . '/' . $this->endPoint, [
             'config' => [
                 'curl' => [
                     CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
@@ -219,8 +237,7 @@ class TaxRequest
 
         try {
             $prevErrorState = libxml_use_internal_errors(true);
-            ;
-            $taxResponse = simplexml_load_string(trim($response->getBody()));
+            $taxResponse = simplexml_load_string(trim($this->clientResponse->getBody()));
             $errors      = libxml_get_errors();
             if (count($errors) > 0) {
                 foreach ($errors as $error) {
