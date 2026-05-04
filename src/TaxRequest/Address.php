@@ -76,7 +76,7 @@ class Address
         $xml .= '<address_line2>' . (! empty($this->address2) ? '<![CDATA[' : '') . $this->address2 . (! empty($this->address2) ? ']]>' : '') . '</address_line2>';
         $xml .= '<city>' . $this->city . '</city>';
         $xml .= '<state>' . $this->state . '</state>';
-        if ($this->country = 'US' && $wrapper == 'shipto') {
+        if ($this->country == 'US' && $wrapper == 'shipto') {
             $xml .= '<zip>' . $this->zip . '</zip>';
             if (! empty($this->plus4) && ! is_null($this->plus4)) {
                 $xml .= '<plus4>' . $this->plus4 . '</plus4>';
