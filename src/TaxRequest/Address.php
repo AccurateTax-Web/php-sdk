@@ -82,7 +82,7 @@ class Address
                 $xml .= '<plus4>' . $this->plus4 . '</plus4>';
             }
         } else if ($this->country == 'CA' && $wrapper == 'shipto') {
-            $xml .= '<postalcode>' . $this->zip . '</postalcode>';
+            $xml .= '<postal_code>' . $this->zip . '</postal_code>';
             $xml .= '<country>' . $this->country . '</country>';
         }
         $xml .= '</' . $wrapper . '>';
