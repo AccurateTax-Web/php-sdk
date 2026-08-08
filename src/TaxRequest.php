@@ -72,6 +72,16 @@ class TaxRequest
     private Client $client;
 
     /**
+     * @var float Connection timeout in seconds
+     */
+    private float $connectTimeout = 5.0;
+
+    /**
+     * @var float Total request timeout in seconds
+     */
+    private float $requestTimeout = 20.0;
+
+    /**
      * Create a TaxRequest
      * @param string $licensekey
      * @param string $checksum
@@ -151,6 +161,32 @@ class TaxRequest
     }
 
     /**
+     * Set connection timeout in seconds.
+     *
+     * @param float $seconds
+     * @return void
+     */
+    public function setConnectTimeout(float $seconds): void
+    {
+        if ($seconds > 0) {
+            $this->connectTimeout = $seconds;
+        }
+    }
+
+    /**
+     * Set total request timeout in seconds.
+     *
+     * @param float $seconds
+     * @return void
+     */
+    public function setRequestTimeout(float $seconds): void
+    {
+        if ($seconds > 0) {
+            $this->requestTimeout = $seconds;
+        }
+    }
+
+    /**
      * Add an Order to the Tax Request
      *
      * @param Order $order
@@ -220,7 +256,8 @@ class TaxRequest
     {
         $this->client   = new Client(
             [
-                'timeout' => 60,
+                'connect_timeout' => $this->connectTimeout,
+                'timeout' => $this->requestTimeout,
             ]
         );
         $this->clientResponse = $this->client->request('GET', 'https://' . $this->domain . '/' . $this->endPoint, [

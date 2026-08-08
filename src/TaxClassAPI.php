@@ -14,6 +14,16 @@ class TaxClassAPI {
     protected $protocol;
 
     /**
+     * @var int Connection timeout in seconds
+     */
+    private int $connectTimeout = 5;
+
+    /**
+     * @var int Total request timeout in seconds
+     */
+    private int $requestTimeout = 20;
+
+    /**
      * Create TaxClassAPI object
      * @param string $protocol
      * @param string $domain
@@ -72,6 +82,8 @@ class TaxClassAPI {
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->connectTimeout);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->requestTimeout);
         $headers = [
             'Content-Type: application/json',
             'X-AT: 1'

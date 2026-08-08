@@ -12,6 +12,16 @@ class OrderApi {
     public $statusCode;
 
     /**
+     * @var float Connection timeout in seconds
+     */
+    private float $connectTimeout = 5.0;
+
+    /**
+     * @var float Total request timeout in seconds
+     */
+    private float $requestTimeout = 20.0;
+
+    /**
      * Create a new AccurateTax OrderApi Object
      *
      * @param string $license
@@ -36,6 +46,8 @@ class OrderApi {
         $host = 'https://' . $this->domain . '/getOrderDetailsService.php/' . $ordernum;
         $client = new Client([
             'auth' => [trim($this->license), trim($this->checksum)],
+            'connect_timeout' => $this->connectTimeout,
+            'timeout' => $this->requestTimeout,
         ]);
 
         try {
