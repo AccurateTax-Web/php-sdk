@@ -44,7 +44,7 @@
          * @param string $domain
          * @param string $path
          */
-        public function __construct($domain='', $path='', $maxRequests=10, protected $headers = []) {
+        public function __construct($domain='', $path='', $maxRequests=15, protected $headers = []) {
             if (!empty($domain)) {
                 $this->domain = $domain;
             }
@@ -52,10 +52,10 @@
             if (!empty($path)) {
                 $this->endPoint = $path;
             }
-            if (is_int($maxRequests) && $maxRequests > 0 && $maxRequests < 10) {
+            if (is_int($maxRequests) && $maxRequests > 0 && $maxRequests < 15) {
                 $this->maxRequests = $maxRequests;
             } else {
-                $this->maxRequests = 10;
+                $this->maxRequests = 15;
             }
             $this->client = new Client();
         }
