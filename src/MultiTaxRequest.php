@@ -1,9 +1,7 @@
 <?php
     namespace AccurateTax;
-
-    use GuzzleHttp\Pool;
     use GuzzleHttp\Client;
-    use GuzzleHttp\Exception\RequestException;
+    use GuzzleHttp\Pool;
     use GuzzleHttp\Psr7\Request;
     use GuzzleHttp\Psr7\Response;
 
@@ -11,7 +9,7 @@
         /**
          * @var array Array of tax Requests
          */
-        private $taxRequests =  [];
+        private $taxRequests = [];
 
         /**
          * @var int Max size of Tax Requests in each batch
@@ -54,7 +52,7 @@
          * @param string $domain
          * @param string $path
          */
-        public function __construct($domain='', $path='', $maxRequests=15, protected $headers = []) {
+        public function __construct($domain='', $path='', $maxRequests=12, protected $headers=[]) {
             if (!empty($domain)) {
                 $this->domain = $domain;
             }
@@ -73,7 +71,7 @@
             ]);
         }
 
-        public function addTaxRequest(\AccurateTax\TaxRequest $taxRequest) {
+        public function addTaxRequest(TaxRequest $taxRequest) {
             array_push($this->taxRequests, $taxRequest);
         }
 
@@ -175,7 +173,7 @@
                             }
                         }
                     },
-                    'rejected' => function (RequestException $reason, $idx) use(&$errors, $waveRequests) {
+                    'rejected' => function (\Throwable $reason, $idx) use (&$errors, $waveRequests) {
                         $req = $waveRequests[$idx];
                         if (!isset($req->errors)) {
                             $req->errors = [];
