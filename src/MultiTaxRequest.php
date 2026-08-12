@@ -188,7 +188,7 @@
                 $promise = $pool->promise();
                 $promise->wait();
                 $waveDuration = microtime(true) - $waveStart;
-                error_log(sprintf('[MultiTaxRequest] Wave %d/%d completed in %.3fs (%d request(s))', $waveNumber, $waveCount, $waveDuration, count($waveRequests)));
+                //error_log(sprintf('[MultiTaxRequest] Wave %d/%d completed in %.3fs (%d request(s))', $waveNumber, $waveCount, $waveDuration, count($waveRequests)));
             }
 
             libxml_use_internal_errors($prevErrorState);
